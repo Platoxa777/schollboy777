@@ -1,17 +1,16 @@
-import os
-from dotenv import load_dotenv
+import logging
 from aiogram import Bot, Dispatcher, types
 from aiogram.filters import Command
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton, WebAppInfo
 from aiogram import Router
-import logging
 import asyncio
 
-# Загрузка переменных окружения
-load_dotenv()
+# Защищённое хранение токена в коде
+API_TOKEN = "7531766827:AAF0RjliSMsFF_Eske0tkNlRlOzyG4amT1c"
 
-# Получение токена из переменной окружения
-API_TOKEN = os.getenv('7531766827:AAF0RjliSMsFF_Eske0tkNlRlOzyG4amT1c')
+# Проверка на наличие токена
+if not API_TOKEN:
+    raise ValueError("Токен не задан! Проверьте переменную API_TOKEN в коде.")
 
 # Настройка логирования
 logging.basicConfig(level=logging.INFO)
