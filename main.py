@@ -1,20 +1,23 @@
-import logging
-import asyncio
+import os
+from dotenv import load_dotenv
 from aiogram import Bot, Dispatcher, types
 from aiogram.filters import Command
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton, WebAppInfo
 from aiogram import Router
+import logging
+import asyncio
 
-# Токен твоего бота
-API_TOKEN = '7531766827:AAFZIlc7tdN5V_HCHbNvi2TW5VJL5IbBhPw'
+# Загрузка переменных окружения
+load_dotenv()
+
+# Получение токена из переменной окружения
+API_TOKEN = os.getenv('7531766827:AAF0RjliSMsFF_Eske0tkNlRlOzyG4amT1c')
 
 # Настройка логирования
 logging.basicConfig(level=logging.INFO)
 
-# Инициализация бота
+# Инициализация бота и диспетчера
 bot = Bot(token=API_TOKEN)
-
-# Инициализация диспетчера и роутера
 dp = Dispatcher()
 router = Router()
 dp.include_router(router)
@@ -22,7 +25,6 @@ dp.include_router(router)
 # Обработчик команды /start
 @router.message(Command("start"))
 async def send_welcome(message: types.Message):
-    # Создаём кнопку для запуска Web App
     keyboard = InlineKeyboardMarkup(inline_keyboard=[
         [InlineKeyboardButton(text="Запустить веб-приложение", web_app=WebAppInfo(url="https://platoxa777.github.io/schollboy/"))]
     ])
@@ -41,7 +43,6 @@ async def main():
         await bot.session.close()
         logging.info("Сессия бота завершена.")
 
-# Запуск бота
 if __name__ == '__main__':
     try:
         asyncio.run(main())
