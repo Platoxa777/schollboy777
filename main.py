@@ -6,7 +6,7 @@ from aiogram import Router
 import asyncio
 
 # Защищённое хранение токена в коде
-API_TOKEN = "7531766827:AAF0RjliSMsFF_Eske0tkNlRlOzyG4amT1c"
+API_TOKEN = "7531766827:AAGUy-ZymYI48RtnVjy3aTXPjFGbvcyDc-o"
 
 # Проверка на наличие токена
 if not API_TOKEN:
