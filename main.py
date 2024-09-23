@@ -28,13 +28,24 @@ dp = Dispatcher()
 # Создание роутера для управления командами
 router = Router()
 
+
 # Пример обработчика команды /start
 @router.message(CommandStart())  # Используем фильтр CommandStart для команды /start
 async def send_welcome(message: types.Message):
-    await message.reply("Привет! Добро пожаловать в моего Telegram бота.")
+  
+    web_app_button = types.InlineKeyboardButton(text="Перейти к веб-приложению",
+                                                url="https://platoxa777.github.io/schollboy777/")
+    keyboard = types.InlineKeyboardMarkup(inline_keyboard=[[web_app_button]])
+
+    # Отправка сообщения с кнопкой
+    await message.reply(
+        "Привет! Добро пожаловать в моего Telegram бота.\nНажмите на кнопку ниже, чтобы перейти к веб-приложению:",
+        reply_markup=keyboard)
+
 
 # Регистрация роутера в диспетчере
 dp.include_router(router)
+
 
 # Асинхронная функция для запуска бота
 async def main():
@@ -43,6 +54,7 @@ async def main():
         await dp.start_polling(bot)  # Запуск опроса
     finally:
         await bot.session.close()  # Закрытие сессии бота по завершении
+
 
 # Запуск асинхронного цикла для бота
 if __name__ == '__main__':
