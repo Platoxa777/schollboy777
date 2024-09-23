@@ -1,147 +1,120 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Schoolboy Game</title>
     <style>
         body {
-            font-family: 'Arial', sans-serif;
-            background-color: #f4f4f4;
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
             text-align: center;
-            margin: 0;
             padding: 20px;
         }
         h1 {
             color: #333;
-            font-size: 2.5em;
-        }
-        .question-container {
-            background-color: white;
-            border-radius: 10px;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            margin: 20px auto;
-            width: 80%;
-            max-width: 800px;
-        }
-        .question-text {
-            font-size: 1.5em;
-            margin-bottom: 20px;
-        }
-        .answer-btn {
-            display: block;
-            background-color: #4CAF50;
-            color: white;
-            padding: 15px;
-            margin: 10px 0;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 1.2em;
-            transition: background-color 0.3s ease;
-        }
-        .answer-btn:hover {
-            background-color: #45a049;
         }
         .image-container {
-            text-align: center;
-            margin-bottom: 20px;
+            margin: 20px 0;
         }
         .question-image {
             max-width: 100%;
-            border-radius: 10px;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            height: auto;
+            border-radius: 8px;
+        }
+        .question-text {
+            font-size: 20px;
+            margin-bottom: 20px;
+            color: #555;
+        }
+        .answer-btn {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            font-size: 18px;
+            background-color: #3498db;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .answer-btn:hover {
+            background-color: #2980b9;
         }
     </style>
 </head>
 <body>
-    <div id="main">
-        <h1>Schoolboy Game</h1>
-        <div class="question-container" id="questionContainer">
-            <div class="image-container" id="imageContainer">
-                <!-- Путь к файлу start-image.jpg -->
-                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTk2RLeHMDks--vyY9JHKemZVQYgidonYkjFA&s" alt="Стартовое изображение" class="question-image">
-            </div>
-            <div class="question-text" id="questionText">Добро пожаловать в новую школу! Хочешь выжить? Начнём!</div>
-            <button class="answer-btn" onclick="nextQuestion()">Начать игру</button>
-        </div>
-    </div>
 
-    <script>
-        const questions = [
-            {
-                question: 'Что делает яблоко, если его отпустить в космосе?',
-                answers: [
-                    { text: 'Летит прямо, как мой дневник из окна!', score: 1, img: 'images/apple-space.jpg' },
-                    { text: 'Оно же невесомое, значит висит!', score: -1, img: 'images/apple-floating.jpg' },
-                    { text: 'Превращается в сидр?', score: -1, img: 'images/apple-cider.jpg' }
-                ]
-            },
-            {
-                question: 'Кто написал "Войну и мир"?',
-                answers: [
-                    { text: 'Это Толстой, и я как он, пишу домашку до утра!', score: 1, img: 'images/tolstoy.jpg' },
-                    { text: 'Это та книга на тысячу страниц? Наверно, Гарри Поттер!', score: -1, img: 'images/harry-potter.jpg' },
-                    { text: 'Наверняка Шекспир!', score: -1, img: 'images/shakespeare.jpg' }
-                ]
-            },
-            {
-                question: 'Какой процесс называют фотосинтезом?',
-                answers: [
-                    { text: 'Это как Instagram, только для растений.', score: 1, img: 'images/photosynthesis.jpg' },
-                    { text: 'Когда цветы превращаются в Wi-Fi.', score: -1, img: 'images/flowers-wifi.jpg' },
-                    { text: 'Процесс, когда растения делают еду на свету!', score: 1, img: 'images/plant-food.jpg' }
-                ]
-            },
-            {
-                question: 'Сколько будет 7 * 8?',
-                answers: [
-                    { text: '56, я же не младенец!', score: 1, img: 'images/math-56.jpg' },
-                    { text: 'Чё, опять математика? Ну, 49?', score: -1, img: 'images/math-49.jpg' },
-                    { text: 'Могу погуглить за шоколадку!', score: 1, img: 'images/chocolate.jpg' }
-                ]
-            }
-        ];
+<h1>Schoolboy Game</h1>
 
-        let currentQuestionIndex = 0;
-        let score = 0;
+<div class="image-container" id="imageContainer">
+    <img src="start-image.jpg" alt="Начало игры" class="question-image">
+</div>
 
-        function nextQuestion(answerScore) {
-            if (answerScore !== undefined) {
-                score += answerScore;
-            }
+<div class="question-text" id="questionText">
+    Добро пожаловать в игру! Нажмите кнопку, чтобы начать.
+</div>
 
-            if (currentQuestionIndex >= questions.length) {
-                document.getElementById('questionText').innerHTML = `Игра окончена! Ваш итоговый счёт: ${score}`;
-                document.getElementById('imageContainer').innerHTML = '<img src="https://img02.rl0.ru/afisha/e1000x500i/daily.afisha.ru/uploads/images/8/ef/8ef4ed0680a6f4a6d9780f402f111150.jpg" alt="Конец игры" class="question-image">';
-                document.querySelector('.answer-btn').style.display = 'none';
-                return;
-            }
+<div id="questionContainer">
+    <button class="answer-btn" onclick="startGame()">Начать игру</button>
+</div>
 
-            const currentQuestion = questions[currentQuestionIndex];
-            document.getElementById('questionText').innerHTML = currentQuestion.question;
-            document.getElementById('imageContainer').innerHTML = `<img src="${currentQuestion.answers[0].img}" alt="${currentQuestion.answers[0].text}" class="question-image">`;
+<script>
+    let score = 0;
+    let currentQuestionIndex = 0;
 
-            const buttonContainer = document.getElementById('questionContainer');
-            buttonContainer.innerHTML = `
-                <div class="image-container" id="imageContainer">
-                    <img src="${currentQuestion.answers[0].img}" alt="${currentQuestion.answers[0].text}" class="question-image">
-                </div>
-                <div class="question-text" id="questionText">${currentQuestion.question}</div>
-            `;
-
-            currentQuestion.answers.forEach(answer => {
-                const answerBtn = document.createElement('button');
-                answerBtn.className = 'answer-btn';
-                answerBtn.innerText = answer.text;
-                answerBtn.onclick = () => nextQuestion(answer.score);
-                buttonContainer.appendChild(answerBtn);
-            });
-
-            currentQuestionIndex++;
+    const questions = [
+        {
+            question: "Вы пришли на урок, что вы сделаете?",
+            answers: [
+                { text: "Сяду за первую парту", score: 10, img: "school-image-1.jpg" },
+                { text: "Проигнорирую учителя", score: -10, img: "school-image-2.jpg" }
+            ]
+        },
+        {
+            question: "Вы получили задание. Что дальше?",
+            answers: [
+                { text: "Сразу сделаю домашнее задание", score: 10, img: "homework-image.jpg" },
+                { text: "Не буду его делать", score: -10, img: "lazy-image.jpg" }
+            ]
         }
-    </script>
+    ];
+
+    function startGame() {
+        nextQuestion();
+    }
+
+    function nextQuestion(answerScore) {
+        if (answerScore !== undefined) {
+            score += answerScore;
+        }
+
+        if (currentQuestionIndex >= questions.length) {
+            document.getElementById('questionText').innerHTML = `Игра окончена! Ваш итоговый счёт: ${score}`;
+            document.getElementById('imageContainer').innerHTML = '<img src="end-game.jpg" alt="Конец игры" class="question-image">';
+            document.querySelector('#questionContainer').innerHTML = '';
+            return;
+        }
+
+        const currentQuestion = questions[currentQuestionIndex];
+        document.getElementById('questionText').innerHTML = currentQuestion.question;
+        document.getElementById('imageContainer').innerHTML = `<img src="${currentQuestion.answers[0].img}" alt="${currentQuestion.answers[0].text}" class="question-image">`;
+
+        const buttonContainer = document.getElementById('questionContainer');
+        buttonContainer.innerHTML = '';
+
+        currentQuestion.answers.forEach(answer => {
+            const answerBtn = document.createElement('button');
+            answerBtn.className = 'answer-btn';
+            answerBtn.innerText = answer.text;
+            answerBtn.onclick = () => nextQuestion(answer.score);
+            buttonContainer.appendChild(answerBtn);
+        });
+
+        currentQuestionIndex++;
+    }
+</script>
+
 </body>
 </html>
