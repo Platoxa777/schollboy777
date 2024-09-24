@@ -6,58 +6,82 @@
     <title>Schoolboy Game</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f9;
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(45deg, #ece9e6, #ffffff);
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            perspective: 1000px;
+        }
+        .game-container {
             text-align: center;
             padding: 20px;
+            box-shadow: 0px 0px 20px rgba(0,0,0,0.1);
+            border-radius: 10px;
+            background-color: #fff;
+            transform: rotateY(0deg);
+            transition: transform 0.8s;
         }
         h1 {
-            color: #333;
+            color: #2c3e50;
+            font-size: 32px;
         }
         .image-container {
             margin: 20px 0;
+            transform: translateZ(50px);
         }
         .question-image {
             max-width: 100%;
             height: auto;
             border-radius: 8px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
         }
         .question-text {
-            font-size: 20px;
+            font-size: 24px;
             margin-bottom: 20px;
-            color: #555;
+            color: #34495e;
         }
         .answer-btn {
-            display: block;
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0;
+            display: inline-block;
+            width: 200px;
+            padding: 12px 20px;
+            margin: 10px;
             font-size: 18px;
-            background-color: #3498db;
+            background: #3498db;
             color: #fff;
             border: none;
-            border-radius: 5px;
+            border-radius: 25px;
             cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s;
         }
         .answer-btn:hover {
             background-color: #2980b9;
+            transform: translateZ(20px) scale(1.1);
+        }
+        .game-container:hover {
+            transform: rotateY(15deg);
         }
     </style>
 </head>
 <body>
 
-<h1>Schoolboy Game</h1>
+<div class="game-container">
+    <h1>Schoolboy Game</h1>
 
-<div class="image-container" id="imageContainer">
-    <img src="start-image.jpg" alt="Начало игры" class="question-image">
-</div>
+    <div class="image-container" id="imageContainer">
+        <img src="start-image.jpg" alt="Начало игры" class="question-image">
+    </div>
 
-<div class="question-text" id="questionText">
-    Добро пожаловать в игру! Нажмите кнопку, чтобы начать.
-</div>
+    <div class="question-text" id="questionText">
+        Добро пожаловать в игру! Нажмите кнопку, чтобы начать.
+    </div>
 
-<div id="questionContainer">
-    <button class="answer-btn" onclick="startGame()">Начать игру</button>
+    <div id="questionContainer">
+        <button class="answer-btn" onclick="startGame()">Начать игру</button>
+    </div>
 </div>
 
 <script>
@@ -77,6 +101,13 @@
             answers: [
                 { text: "Сразу сделаю домашнее задание", score: 10, img: "homework-image.jpg" },
                 { text: "Не буду его делать", score: -10, img: "lazy-image.jpg" }
+            ]
+        },
+        {
+            question: "Вы видите одноклассника, которому нужна помощь. Что будете делать?",
+            answers: [
+                { text: "Помогу ему", score: 10, img: "help-image.jpg" },
+                { text: "Проигнорирую", score: -10, img: "ignore-image.jpg" }
             ]
         }
     ];
