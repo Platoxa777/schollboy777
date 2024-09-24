@@ -7,7 +7,7 @@
     <style>
         body {
             font-family: 'Arial', sans-serif;
-            background: linear-gradient(45deg, #e0ffff, #87cefa);
+            background: linear-gradient(45deg, #a7c5eb, #ffffff); /* Лазурный фон */
             color: #333;
             display: flex;
             justify-content: center;
@@ -24,9 +24,11 @@
             background-color: #fff;
             transform: rotateY(0deg);
             transition: transform 0.8s;
+            max-width: 600px;
+            width: 100%;
         }
         h1 {
-            color: #1e90ff;
+            color: #2c3e50;
             font-size: 32px;
         }
         .image-container {
@@ -50,7 +52,7 @@
             padding: 12px 20px;
             margin: 10px;
             font-size: 18px;
-            background: #1e90ff;
+            background: #3498db;
             color: #fff;
             border: none;
             border-radius: 25px;
@@ -58,17 +60,24 @@
             transition: background-color 0.3s, transform 0.3s;
         }
         .answer-btn:hover {
-            background-color: #104e8b;
+            background-color: #2980b9;
             transform: translateZ(20px) scale(1.1);
         }
         .game-container:hover {
             transform: rotateY(15deg);
         }
+        .fade-in {
+            animation: fadeIn 1s;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
     </style>
 </head>
 <body>
 
-<div class="game-container">
+<div class="game-container fade-in">
     <h1>Schoolboy Game</h1>
 
     <div class="image-container" id="imageContainer">
@@ -99,34 +108,40 @@
         {
             question: "Вы получили задание. Что дальше?",
             answers: [
-                { text: "Сразу сделаю домашнее задание", score: 10, img: "https://www.kino-teatr.ru/news/32656/298387.jpg" },
-                { text: "Не буду его делать", score: -10, img: "https://avatars.mds.yandex.net/i?id=0406261ffc99fceb21eacb9fd01a4b0227987ea9735e268a-12797344-images-thumbs&n=13" }
+                { text: "Сразу сделаю домашнее задание", score: 10, img: "https://masterpiecer-images.s3.yandex.net/ba4eb47d77cc11eeb86156181a0358a2:upscaled" },
+                { text: "Не буду его делать", score: -10, img: "https://www.kino-teatr.ru/news/32656/298387.jpg" }
             ]
         },
         {
-            question: "Ваш друг просит помощь. Что будете делать?",
+            question: "Вы видите одноклассника, которому нужна помощь. Что будете делать?",
             answers: [
-                { text: "Помогу другу", score: 10, img: "https://masterpiecer-images.s3.yandex.net/ba4eb47d77cc11eeb86156181a0358a2:upscaled" },
+                { text: "Помогу ему", score: 10, img: "https://avatars.mds.yandex.net/i?id=0406261ffc99fceb21eacb9fd01a4b0227987ea9735e268a-12797344-images-thumbs&n=13" },
                 { text: "Проигнорирую", score: -10, img: "https://www.kino-teatr.ru/news/32656/298387.jpg" }
             ]
         },
         {
-            question: "На перемене вы видите, как кто-то дразнит другого ученика. Как поступите?",
+            question: "Вы провалили контрольную. Что делать?",
             answers: [
-                { text: "Защищу ученика", score: 10, img: "https://avatars.mds.yandex.net/i?id=0406261ffc99fceb21eacb9fd01a4b0227987ea9735e268a-12797344-images-thumbs&n=13" },
-                { text: "Присоединюсь к дразнилкам", score: -10, img: "https://masterpiecer-images.s3.yandex.net/ba4eb47d77cc11eeb86156181a0358a2:upscaled" }
+                { text: "Постараюсь наверстать", score: 10, img: "https://masterpiecer-images.s3.yandex.net/ba4eb47d77cc11eeb86156181a0358a2:upscaled" },
+                { text: "Буду игнорировать и дальше", score: -10, img: "https://www.kino-teatr.ru/news/32656/298387.jpg" }
             ]
         },
         {
-            question: "Как вы отреагируете на вызов к доске?",
+            question: "Одноклассники приглашают на вечеринку, что вы ответите?",
             answers: [
-                { text: "Выйду с уверенностью", score: 10, img: "https://www.kino-teatr.ru/news/32656/298387.jpg" },
-                { text: "Постараюсь избежать", score: -10, img: "https://avatars.mds.yandex.net/i?id=0406261ffc99fceb21eacb9fd01a4b0227987ea9735e268a-12797344-images-thumbs&n=13" }
+                { text: "Пойду и повеселюсь", score: 10, img: "https://avatars.mds.yandex.net/i?id=0406261ffc99fceb21eacb9fd01a4b0227987ea9735e268a-12797344-images-thumbs&n=13" },
+                { text: "Останусь дома и подготовлюсь к экзаменам", score: 5, img: "https://www.kino-teatr.ru/news/32656/298387.jpg" }
             ]
         }
     ];
 
+    function playSoundEffect() {
+        const audio = new Audio('https://www.soundjay.com/button/beep-07.mp3');
+        audio.play();
+    }
+
     function startGame() {
+        playSoundEffect();
         nextQuestion();
     }
 
@@ -137,24 +152,32 @@
 
         if (currentQuestionIndex >= questions.length) {
             document.getElementById('questionText').innerHTML = `Игра окончена! Ваш итоговый счёт: ${score}`;
-            document.getElementById('imageContainer').innerHTML = '<img src="https://masterpie
-cer-images.s3.yandex.net/ba4eb47d77cc11eeb86156181a0358a2
-" alt="Конец игры" class="question-image">'; document.querySelector('#questionContainer').innerHTML = ''; return; }
+            document.getElementById('imageContainer').innerHTML = '<img src="https://www.kino-teatr.ru/news/32656/298387.jpg" alt="Конец игры" class="question-image">';
+            document.querySelector('#questionContainer').innerHTML = '';
+            return;
+        }
+
         const currentQuestion = questions[currentQuestionIndex];
-    document.getElementById('questionText').innerHTML = currentQuestion.question;
-    document.getElementById('imageContainer').innerHTML = `<img src="${currentQuestion.answers[0].img}" alt="${currentQuestion.answers[0].text}" class="question-image">`;
+        document.getElementById('questionText').innerHTML = currentQuestion.question;
+        document.getElementById('imageContainer').innerHTML = `<img src="${currentQuestion.answers[0].img}" alt="${currentQuestion.answers[0].text}" class="question-image fade-in">`;
 
-    const buttonContainer = document.getElementById('questionContainer');
-    buttonContainer.innerHTML = '';
+        const buttonContainer = document.getElementById('questionContainer');
+        buttonContainer.innerHTML = '';
 
-    currentQuestion.answers.forEach(answer => {
-        const answerBtn = document.createElement('button');
-        answerBtn.className = 'answer-btn';
-        answerBtn.innerText = answer.text;
-        answerBtn.onclick = () => nextQuestion(answer.score);
-        buttonContainer.appendChild(answerBtn);
-    });
+        currentQuestion.answers.forEach(answer => {
+            const answerBtn = document.createElement('button');
+            answerBtn.className = 'answer-btn';
+            answerBtn.innerText = answer.text;
+            answerBtn.onclick = () => {
+                playSoundEffect();
+                nextQuestion(answer.score);
+            };
+            buttonContainer.appendChild(answerBtn);
+        });
 
-    currentQuestionIndex++;
-}
-</script> </body> </html> ```
+        currentQuestionIndex++;
+    }
+</script>
+
+</body>
+</html>
