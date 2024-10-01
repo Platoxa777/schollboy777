@@ -7,7 +7,7 @@
     <style>
         body {
             font-family: 'Arial', sans-serif;
-            background: linear-gradient(45deg, #a7c5eb, #ffffff); /* Лазурный фон */
+            background: linear-gradient(45deg, #a7c5eb, #ffffff);
             color: #333;
             display: flex;
             justify-content: center;
@@ -26,6 +26,10 @@
             transition: transform 0.8s;
             max-width: 600px;
             width: 100%;
+            perspective: 600px;
+        }
+        .game-container:hover {
+            transform: rotateY(15deg) rotateX(10deg);
         }
         h1 {
             color: #2c3e50;
@@ -58,13 +62,11 @@
             border-radius: 25px;
             cursor: pointer;
             transition: background-color 0.3s, transform 0.3s;
+            transform: perspective(600px);
         }
         .answer-btn:hover {
             background-color: #2980b9;
             transform: translateZ(20px) scale(1.1);
-        }
-        .game-container:hover {
-            transform: rotateY(15deg);
         }
         .fade-in {
             animation: fadeIn 1s;
@@ -72,6 +74,10 @@
         @keyframes fadeIn {
             from { opacity: 0; }
             to { opacity: 1; }
+        }
+        @keyframes spin {
+            from { transform: rotateY(0deg); }
+            to { transform: rotateY(360deg); }
         }
     </style>
 </head>
@@ -105,6 +111,7 @@
                 { text: "Проигнорирую учителя", score: -10, img: "https://www.kino-teatr.ru/news/32656/298387.jpg" }
             ]
         },
+        // Добавляем больше вопросов для длинной игры
         {
             question: "Вы получили задание. Что дальше?",
             answers: [
@@ -113,17 +120,17 @@
             ]
         },
         {
-            question: "Вы видите одноклассника, которому нужна помощь. Что будете делать?",
+            question: "Ваш друг предлагает сбежать с уроков. Что будете делать?",
             answers: [
-                { text: "Помогу ему", score: 10, img: "https://avatars.mds.yandex.net/i?id=0406261ffc99fceb21eacb9fd01a4b0227987ea9735e268a-12797344-images-thumbs&n=13" },
-                { text: "Проигнорирую", score: -10, img: "https://www.kino-teatr.ru/news/32656/298387.jpg" }
+                { text: "Останусь на уроке", score: 10, img: "https://avatars.mds.yandex.net/i?id=0406261ffc99fceb21eacb9fd01a4b0227987ea9735e268a-12797344-images-thumbs&n=13" },
+                { text: "Сбегу с ним", score: -20, img: "https://www.kino-teatr.ru/news/32656/298387.jpg" }
             ]
         },
         {
-            question: "Вы провалили контрольную. Что делать?",
+            question: "Учитель предлагает дополнительную задачу для повышения оценки. Что вы сделаете?",
             answers: [
-                { text: "Постараюсь наверстать", score: 10, img: "https://masterpiecer-images.s3.yandex.net/ba4eb47d77cc11eeb86156181a0358a2:upscaled" },
-                { text: "Буду игнорировать и дальше", score: -10, img: "https://www.kino-teatr.ru/news/32656/298387.jpg" }
+                { text: "Соглашусь и выполню", score: 15, img: "https://masterpiecer-images.s3.yandex.net/ba4eb47d77cc11eeb86156181a0358a2:upscaled" },
+                { text: "Откажусь", score: -5, img: "https://www.kino-teatr.ru/news/32656/298387.jpg" }
             ]
         },
         {
@@ -131,6 +138,13 @@
             answers: [
                 { text: "Пойду и повеселюсь", score: 10, img: "https://avatars.mds.yandex.net/i?id=0406261ffc99fceb21eacb9fd01a4b0227987ea9735e268a-12797344-images-thumbs&n=13" },
                 { text: "Останусь дома и подготовлюсь к экзаменам", score: 5, img: "https://www.kino-teatr.ru/news/32656/298387.jpg" }
+            ]
+        },
+        {
+            question: "Контрольная работа! Как поступите?",
+            answers: [
+                { text: "Готовился заранее, все напишу", score: 20, img: "https://avatars.mds.yandex.net/i?id=0406261ffc99fceb21eacb9fd01a4b0227987ea9735e268a-12797344-images-thumbs&n=13" },
+                { text: "Буду списывать", score: -15, img: "https://www.kino-teatr.ru/news/32656/298387.jpg" }
             ]
         }
     ];
@@ -164,15 +178,12 @@
         const buttonContainer = document.getElementById('questionContainer');
         buttonContainer.innerHTML = '';
 
-        currentQuestion.answers.forEach(answer => {
-            const answerBtn = document.createElement('button');
-            answerBtn.className = 'answer-btn';
-            answerBtn.innerText = answer.text;
-            answerBtn.onclick = () => {
-                playSoundEffect();
-                nextQuestion(answer.score);
-            };
-            buttonContainer.appendChild(answerBtn);
+        currentQuestion.answers.forEach((answer) => {
+            const button = document.createElement('button');
+            button.className = 'answer-btn';
+            button.innerText = answer.text;
+            button.onclick = () => nextQuestion(answer.score);
+            buttonContainer.appendChild(button);
         });
 
         currentQuestionIndex++;
