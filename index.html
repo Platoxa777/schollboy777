@@ -16,41 +16,20 @@
             margin: 0;
             perspective: 1000px;
         }
-        .game-container {
+        .menu-container, .game-container {
             text-align: center;
             padding: 20px;
             box-shadow: 0px 0px 20px rgba(0,0,0,0.1);
             border-radius: 10px;
             background-color: #fff;
-            transform: rotateY(0deg);
-            transition: transform 0.8s;
             max-width: 600px;
             width: 100%;
-            perspective: 600px;
         }
-        .game-container:hover {
-            transform: rotateY(15deg) rotateX(10deg);
-        }
-        h1 {
+        .menu-title, .game-title {
             color: #2c3e50;
             font-size: 32px;
         }
-        .image-container {
-            margin: 20px 0;
-            transform: translateZ(50px);
-        }
-        .question-image {
-            max-width: 100%;
-            height: auto;
-            border-radius: 8px;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-        }
-        .question-text {
-            font-size: 24px;
-            margin-bottom: 20px;
-            color: #34495e;
-        }
-        .answer-btn {
+        .menu-btn, .answer-btn, .login-btn, .register-btn {
             display: inline-block;
             width: 200px;
             padding: 12px 20px;
@@ -62,11 +41,19 @@
             border-radius: 25px;
             cursor: pointer;
             transition: background-color 0.3s, transform 0.3s;
-            transform: perspective(600px);
         }
-        .answer-btn:hover {
+        .menu-btn:hover, .answer-btn:hover, .login-btn:hover, .register-btn:hover {
             background-color: #2980b9;
             transform: translateZ(20px) scale(1.1);
+        }
+        .form-group {
+            margin: 15px 0;
+        }
+        input[type="text"], input[type="password"] {
+            padding: 10px;
+            width: 80%;
+            border-radius: 5px;
+            border: 1px solid #ddd;
         }
         .fade-in {
             animation: fadeIn 1s;
@@ -75,31 +62,68 @@
             from { opacity: 0; }
             to { opacity: 1; }
         }
-        @keyframes spin {
-            from { transform: rotateY(0deg); }
-            to { transform: rotateY(360deg); }
-        }
     </style>
 </head>
 <body>
 
-<div class="game-container fade-in">
-    <h1>Schoolboy Game</h1>
+<!-- Меню -->
+<div id="menu" class="menu-container fade-in">
+    <h1 class="menu-title">Schoolboy Game</h1>
+    <p>Добро пожаловать! Пожалуйста, выберите действие:</p>
+    <button class="menu-btn" onclick="showLoginForm()">Войти</button>
+    <button class="menu-btn" onclick="showRegisterForm()">Регистрация</button>
+</div>
 
+<!-- Форма логина -->
+<div id="loginForm" class="menu-container fade-in" style="display: none;">
+    <h1 class="menu-title">Вход</h1>
+    <div class="form-group">
+        <input type="text" id="loginUsername" placeholder="Логин" required>
+    </div>
+    <div class="form-group">
+        <input type="password" id="loginPassword" placeholder="Пароль" required>
+    </div>
+    <button class="login-btn" onclick="login()">Войти</button>
+    <button class="menu-btn" onclick="showMenu()">Назад в меню</button>
+</div>
+
+<!-- Форма регистрации -->
+<div id="registerForm" class="menu-container fade-in" style="display: none;">
+    <h1 class="menu-title">Регистрация</h1>
+    <div class="form-group">
+        <input type="text" id="registerUsername" placeholder="Логин" required>
+    </div>
+    <div class="form-group">
+        <input type="password" id="registerPassword" placeholder="Пароль" required>
+    </div>
+    <button class="register-btn" onclick="register()">Зарегистрироваться</button>
+    <button class="menu-btn" onclick="showMenu()">Назад в меню</button>
+</div>
+
+<!-- Основная игра -->
+<div id="game" class="game-container fade-in" style="display: none;">
+    <h1 class="game-title">Schoolboy Game</h1>
     <div class="image-container" id="imageContainer">
         <img src="https://masterpiecer-images.s3.yandex.net/ba4eb47d77cc11eeb86156181a0358a2:upscaled" alt="Начало игры" class="question-image">
     </div>
-
     <div class="question-text" id="questionText">
         Добро пожаловать в игру! Нажмите кнопку, чтобы начать.
     </div>
-
     <div id="questionContainer">
         <button class="answer-btn" onclick="startGame()">Начать игру</button>
     </div>
 </div>
 
+<!-- Система рейтинга -->
+<div id="ranking" class="game-container fade-in" style="display: none;">
+    <h1 class="game-title">Рейтинг игроков</h1>
+    <div id="rankingList"></div>
+    <button class="menu-btn" onclick="showMenu()">Назад в меню</button>
+</div>
+
 <script>
+    let users = []; // массив для хранения пользователей
+    let currentUser = null;
     let score = 0;
     let currentQuestionIndex = 0;
 
@@ -107,86 +131,126 @@
         {
             question: "Вы пришли на урок, что вы сделаете?",
             answers: [
-                { text: "Сяду за первую парту", score: 10, img: "https://avatars.mds.yandex.net/i?id=0406261ffc99fceb21eacb9fd01a4b0227987ea9735e268a-12797344-images-thumbs&n=13" },
-                { text: "Проигнорирую учителя", score: -10, img: "https://www.kino-teatr.ru/news/32656/298387.jpg" }
+                { text: "Сяду за первую парту", score: 10 },
+                { text: "Проигнорирую учителя", score: -10 }
             ]
         },
-        // Добавляем больше вопросов для длинной игры
         {
             question: "Вы получили задание. Что дальше?",
             answers: [
-                { text: "Сразу сделаю домашнее задание", score: 10, img: "https://masterpiecer-images.s3.yandex.net/ba4eb47d77cc11eeb86156181a0358a2:upscaled" },
-                { text: "Не буду его делать", score: -10, img: "https://www.kino-teatr.ru/news/32656/298387.jpg" }
+                { text: "Сразу сделаю домашнее задание", score: 10 },
+                { text: "Не буду его делать", score: -10 }
             ]
         },
         {
-            question: "Ваш друг предлагает сбежать с уроков. Что будете делать?",
+            question: "Вы видите одноклассника, которому нужна помощь. Что будете делать?",
             answers: [
-                { text: "Останусь на уроке", score: 10, img: "https://avatars.mds.yandex.net/i?id=0406261ffc99fceb21eacb9fd01a4b0227987ea9735e268a-12797344-images-thumbs&n=13" },
-                { text: "Сбегу с ним", score: -20, img: "https://www.kino-teatr.ru/news/32656/298387.jpg" }
-            ]
-        },
-        {
-            question: "Учитель предлагает дополнительную задачу для повышения оценки. Что вы сделаете?",
-            answers: [
-                { text: "Соглашусь и выполню", score: 15, img: "https://masterpiecer-images.s3.yandex.net/ba4eb47d77cc11eeb86156181a0358a2:upscaled" },
-                { text: "Откажусь", score: -5, img: "https://www.kino-teatr.ru/news/32656/298387.jpg" }
-            ]
-        },
-        {
-            question: "Одноклассники приглашают на вечеринку, что вы ответите?",
-            answers: [
-                { text: "Пойду и повеселюсь", score: 10, img: "https://avatars.mds.yandex.net/i?id=0406261ffc99fceb21eacb9fd01a4b0227987ea9735e268a-12797344-images-thumbs&n=13" },
-                { text: "Останусь дома и подготовлюсь к экзаменам", score: 5, img: "https://www.kino-teatr.ru/news/32656/298387.jpg" }
-            ]
-        },
-        {
-            question: "Контрольная работа! Как поступите?",
-            answers: [
-                { text: "Готовился заранее, все напишу", score: 20, img: "https://avatars.mds.yandex.net/i?id=0406261ffc99fceb21eacb9fd01a4b0227987ea9735e268a-12797344-images-thumbs&n=13" },
-                { text: "Буду списывать", score: -15, img: "https://www.kino-teatr.ru/news/32656/298387.jpg" }
+                { text: "Помогу ему", score: 10 },
+                { text: "Проигнорирую", score: -10 }
             ]
         }
     ];
 
-    function playSoundEffect() {
-        const audio = new Audio('https://www.soundjay.com/button/beep-07.mp3');
-        audio.play();
+    // Показать меню
+    function showMenu() {
+        document.getElementById('menu').style.display = 'block';
+        document.getElementById('loginForm').style.display = 'none';
+        document.getElementById('registerForm').style.display = 'none';
+        document.getElementById('game').style.display = 'none';
+        document.getElementById('ranking').style.display = 'none';
     }
 
+    // Показать форму входа
+    function showLoginForm() {
+        document.getElementById('menu').style.display = 'none';
+        document.getElementById('loginForm').style.display = 'block';
+    }
+
+    // Показать форму регистрации
+    function showRegisterForm() {
+        document.getElementById('menu').style.display = 'none';
+        document.getElementById('registerForm').style.display = 'block';
+    }
+
+    // Показать рейтинг
+    function showRanking() {
+        document.getElementById('menu').style.display = 'none';
+        document.getElementById('ranking').style.display = 'block';
+
+        const rankingList = document.getElementById('rankingList');
+        rankingList.innerHTML = '';
+        users.sort((a, b) => b.score - a.score).forEach(user => {
+            rankingList.innerHTML += `<p>${user.username}: ${user.score}</p>`;
+        });
+    }
+
+    // Регистрация
+    function register() {
+        const username = document.getElementById('registerUsername').value;
+        const password = document.getElementById('registerPassword').value;
+
+        if (username && password) {
+            users.push({ username: username, password: password, score: 0 });
+            alert('Регистрация прошла успешно!');
+            showLoginForm();
+        } else {
+            alert('Введите корректные данные.');
+        }
+    }
+
+    // Вход
+    function login() {
+        const username = document.getElementById('loginUsername').value;
+        const password = document.getElementById('loginPassword').value;
+
+        const user = users.find(u => u.username === username && u.password === password);
+
+        if (user) {
+            currentUser = user;
+            alert('Вход успешен!');
+            startGame();
+        } else {
+            alert('Неверные данные.');
+        }
+    }
+
+    // Начать игру
     function startGame() {
-        playSoundEffect();
+        document.getElementById('loginForm').style.display = 'none';
+        document.getElementById('registerForm').style.display = 'none';
+        document.getElementById('game').style.display = 'block';
         nextQuestion();
     }
 
+    // Следующий вопрос
     function nextQuestion(answerScore) {
         if (answerScore !== undefined) {
             score += answerScore;
         }
 
         if (currentQuestionIndex >= questions.length) {
-            document.getElementById('questionText').innerHTML = `Игра окончена! Ваш итоговый счёт: ${score}`;
-            document.getElementById('imageContainer').innerHTML = '<img src="https://www.kino-teatr.ru/news/32656/298387.jpg" alt="Конец игры" class="question-image">';
-            document.querySelector('#questionContainer').innerHTML = '';
+            document.getElementById('questionText').innerHTML = `Игра завершена! Ваш счёт: ${score}`;
+            currentUser.score = score; // обновить рейтинг пользователя
+            showRanking();
             return;
         }
 
         const currentQuestion = questions[currentQuestionIndex];
         document.getElementById('questionText').innerHTML = currentQuestion.question;
-        document.getElementById('imageContainer').innerHTML = `<img src="${currentQuestion.answers[0].img}" alt="${currentQuestion.answers[0].text}" class="question-image fade-in">`;
 
-        const buttonContainer = document.getElementById('questionContainer');
-        buttonContainer.innerHTML = '';
+        const questionContainer = document.getElementById('questionContainer');
+        questionContainer.innerHTML = '';
 
-        currentQuestion.answers.forEach((answer) => {
+        currentQuestion.answers.forEach(answer => {
             const button = document.createElement('button');
-            button.className = 'answer-btn';
-            button.innerText = answer.text;
-            button.onclick = () => nextQuestion(answer.score);
-            buttonContainer.appendChild(button);
+            button.classList.add('answer-btn');
+            button.innerHTML = answer.text;
+            button.onclick = () => {
+                currentQuestionIndex++;
+                nextQuestion(answer.score);
+            };
+            questionContainer.appendChild(button);
         });
-
-        currentQuestionIndex++;
     }
 </script>
 
